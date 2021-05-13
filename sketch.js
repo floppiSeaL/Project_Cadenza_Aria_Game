@@ -101,6 +101,7 @@ let timeforest2
 let fragment2
 
 //flashback2
+let timeFL2
 let slider;
 let fl2bkdbad
 let stage
@@ -118,15 +119,35 @@ let bystandercount = 0
 let kids1
 let kids2
 let incoming
-let kidX = 0
+let kidX
 let kid2X
 let kidXSpd = 10
 let kidY
 let kidYSpd = 10
+let bulb
+let kidword
 
+//flashback2b
+let timeFL2b
+let ariano
+let bully1
+let bully2
+let bully3
+let brokenheart2
+let twobtimer
+
+//forestscene3
+let timeforest3
+let fragment3
+
+//flashback3
+let timeFL3
 
 // music variables
-let horrorifying_bgm;
+let intro_weirdo
+let aria_motif1
+let aria_nervous
+let aria_heartbeat
 
 function preload() {
 
@@ -209,10 +230,26 @@ function preload() {
   kids1 = loadImage('kids1.png')
   kids2 = loadImage('kids2.png')
   incoming = loadImage('incoming.png')
+  bulb = loadImage('bulb.png')
+  kidword = loadImage('kidword.png')
 
+  //flashback2b
+  ariano = loadImage('ariano.png')
+  bully1 = loadImage('bully1.png')
+  bully2 = loadImage('bully2.png')
+  bully3 = loadImage('bully3.png')
+  brokenheart2 = loadImage('brokenheart2.png')
 
+  //forestscene3
+  fragment3 = loadImage("fragment3.png")
   // music
-  // horrorifying_bgm = loadSound('horrifying_bgm.wav')
+  intro_weirdo = loadSound('intro_weirdo.wav')
+  aria_motif1 = loadSound('aria_motif1.wav')
+  aria_nervous = loadSound('aria_nervous.wav')
+  aria_heartbeat = loadSound('aria_heartbeat.wav')
+
+
+
 }
 
 
@@ -339,28 +376,76 @@ function setup() {
   n2.resize(130, 100)
   n3.resize(130, 100)
   fl2bkdbad.resize(width, height + 190)
-  kids1.resize(300, 200)
-  kids2.resize(300, 200)
+  kids1.resize(200, 100)
+  kids2.resize(200, 100)
   incoming.resize(width, height)
   stage = 1
-  kidY = height
-  kid2X = width
+  kidX = width - 400
+  kidY = height - 200
+  kid2X = width / 2 - 500
+  bulb.resize(160, 110)
+  kidword.resize(160, 110)
+  //flashback2b
+
+  ariano.resize(400, 400)
+  bully1.resize(800, 500)
+  bully2.resize(800, 500)
+  bully3.resize(800, 500)
+  brokenheart2.resize(80, 70)
+  Ariashakes = new Jitter(width / 2 - 180, height / 2 - 200)
+
+  //forestscene3
+  fragment3.resize(80, 70)
+
 }
 function draw() {
   if (scene == 0) {
     coverpage()
   } else if (scene == 1) {
     intropage()
+
+    if (!intro_weirdo.isPlaying()) {
+      intro_weirdo.play()
+    }
   }
   else if (scene == 2) {
     forestscene()
+    intro_weirdo.stop()
+
+    if (!aria_motif1.isPlaying()) {
+      aria_motif1.play()
+    }
   } else if (scene == 3) {
     flashback1()
+    aria_motif1.stop()
+
+    if (!aria_nervous.isPlaying()) {
+      aria_nervous.play()
+    }
+
   } else if (scene == 4) {
     forestscene2()
+
+    aria_nervous.stop()
   } else if (scene == 5) {
     flashback2()
+    if (!aria_motif1.isPlaying()) {
+      aria_motif1.play()
+    }
+  } else if (scene == 6) {
+    flashback2b()
+    aria_motif1.stop()
+    if (!aria_heartbeat.isPlaying()) {
+      aria_heartbeat.play()
+    }
+  } else if (scene == 7) {
+    forestscene3()
+    aria_heartbeat.stop()
+  } else if (scene == 8) {
+    flashback3()
   }
+
+
 
 }
 
@@ -369,7 +454,7 @@ function coverpage() {
   timecover = millis()
   opacity = map(timecover, 0, 10000, 0, 255)
 
-  background(0);
+  background(29, 46, 74);
   tint(255, opacity)
   //coverbgm.play()
   image(title, width / 2 - 250, height / 4)
@@ -390,10 +475,6 @@ function intropage() {
   time = millis() - timecover
 
   // // music 
-  // if (!horrorifying_bgm.isPlaying()) {
-  //   horrorifying_bgm.play()
-  // }
-
 
   //eraser
   image(eraser, mouseX - 40, mouseY - 40, 70, 70)
@@ -444,19 +525,17 @@ function forestscene() {
   timeforest = millis() - timecover - time
 
   if (timeforest > 0 && timeforest <= 10000) {
-
-    blueAria_opacity = map(timeforest, 0, 10000, 255, 0)
-    push()
-    tint(255)
-    image(greyAria, width / 2 - 70, height / 2)
-    tint(255, blueAria_opacity)
-    image(blueAria, width / 2 - 70 - timeforest / 30, height / 2)
-    pop()
-  }
-  else if (timeforest >= 10000 && timeforest <= 15000) {
     image(greyAriacries, width / 2 - 70, height / 2 + 100)
     drawCocoon()
-  } else if (timeforest >= 15000) {
+    // blueAria_opacity = map(timeforest, 0, 10000, 255, 0)
+    // push()
+    // tint(255)
+    // image(greyAria, width / 2 - 70, height / 2)
+    // tint(255, blueAria_opacity)
+    // image(blueAria, width / 2 - 70 - timeforest / 30, height / 2)
+    // pop()
+  }
+  else if (timeforest >= 10000) {
     image(greyAriacries, width / 2 - 70, height / 2 + 100)
     drawCocoon()
 
@@ -475,8 +554,6 @@ function forestscene() {
     if (mouseX > 0 && mouseX < 200 && mouseY > height - 300 && mouseY < height - 100 && mouseIsPressed) {
       scene = 3
     }
-
-
   }
 
 
@@ -507,6 +584,9 @@ function flashback1() {
   background(220);
 
 
+  if (!aria_motif1.isPlaying()) {
+    aria_motif1.play()
+  }
   push()
   timeFL1 = millis() - time - timecover - timeforest
   flashbackopacity = map(timeFL1, 0, 10000, 0, 255)
@@ -641,8 +721,16 @@ function flashback1() {
       pop()
     }
   }
+  if (atRightPlace == false) {
 
-  if (atRightPlace == true) {
+    if (!aria_motif1.isPlaying()) {
+      aria_motif1.play()
+    }
+  } else if (atRightPlace == true) {
+
+    if (!aria_nervous.isPlaying()) {
+      aria_nervous.play()
+    }
     mouseCount++
     if (mouseCount <= 3) {
       //aria!!
@@ -898,6 +986,7 @@ function flashback2() {
 
   background(105, 60)
 
+  timeFL2 = millis() - time - timecover - timeforest - timeFL1 - timeforest2
   if (fl2mouseCount >= 7) {
 
     slider.position(width / 2 - 70, 10);
@@ -905,6 +994,8 @@ function flashback2() {
 
   }
   swap()
+
+
 
 }
 function swap() {
@@ -926,9 +1017,8 @@ function bystanderpov() {
     bystandercount++
   }
 
-  kidX += kidXSpd
-  kid2X -= kidXSpd
-  kidY -= kidYSpd
+
+
   if (bystandercount >= 1 && bystandercount < 20) {
 
     image(kids1, width - 400, height - 200)
@@ -944,22 +1034,46 @@ function bystanderpov() {
     image(ariaback1, width / 2 - 150, height / 2)
 
     image(n2, width / 2 - 200, height / 2 - 80)
-  } if (bystandercount >= 30) {
+  } if (bystandercount >= 30 && bystandercount < 60) {
 
+    image(kids1, width - 400, height - 200)
+    image(kids2, width / 2 - 500, height - 300)
 
-    if (kidY == height / 2) {
+    image(flowernoeyes, width / 2 - 50, height / 2 + 20)
+    image(ariaback, width / 2 - 150, height / 2)
+    image(n2, width / 2 - 200, height / 2 - 80)
+    image(kidword, width - 400, height - 300)
+  }
+  if (bystandercount >= 60 && bystandercount < 90) {
+
+    image(kids1, width - 400, height - 200)
+    image(kids2, width / 2 - 500, height - 300)
+
+    image(flowernoeyes, width / 2 - 50, height / 2 + 20)
+    image(ariaback, width / 2 - 150, height / 2)
+    image(n2, width / 2 - 200, height / 2 - 80)
+    image(bulb, width / 2 - 500, height - 400)
+  }
+  if (bystandercount >= 90) {
+    kidX -= kidXSpd
+    kid2X += kidXSpd
+    kidY -= kidYSpd
+    image(kids1, kidX, kidY)
+    image(kids2, kid2X, kidY)
+    if (kidY <= height / 2 + 100) {
       kidXSpd = 0
       kidYSpd = 0
     }
-    image(kids2, kidX, kidY)
-    image(kids1, kid2X, kidY)
-    console.log(kidX, kidY)
+    console.log(bystandercount)
 
 
     image(flowernoeyes, width / 2 - 50, height / 2 + 20)
     image(ariaback1, width / 2 - 150, height / 2)
     image(n3, width / 2 - 200, height / 2 - 80)
+
+    scene = 6
   }
+
 
 }
 
@@ -1071,6 +1185,86 @@ function mouseClicked() {
   } else if (stage == 7) {
     stage = 8
   }
-  console.log(fl2mouseCount)
+
 }
 
+function flashback2b() {
+  background(163, 95, 82)
+  timeFL2b = millis() - time - timecover - timeforest - timeforest2 - timeFL1 - timeFL2
+  twobtimer++
+  //image(fl2bkdbad, 0, -100)
+  // image(ariano, width / 2 - 180, height / 2 - 200)
+  Ariashakes.move()
+  Ariashakes.display()
+  push()
+  let bully1Val = 80 + frameCount % 255
+  let bully2Val
+  let bully3Val
+
+  if (bully1Val >= 240) {
+    bully2Val = 80 + (frameCount + 5000) % 255
+    tint(255, bully2Val)
+    image(bully2, width / 2 - 360, height / 2 - 250)
+
+  } else {
+
+    tint(255, bully1Val)
+    image(bully1, width / 2 - 360, height / 2 - 250)
+  }
+  pop()
+  if (timeFL2b >= 10000) {
+
+    image(brokenheart2, 100, height - 200)
+  }
+  if (timeFL2b >= 20000) {
+    scene = 7
+  }
+  console.log(twobtimer)
+}
+
+function forestscene3() {
+  background(0);
+  image(pg1, 0, 0);
+  timeforest3 = millis() - time - timecover - timeforest - timeFL1 - timeFL2 - timeFL2b
+
+  if (timeforest3 > 0 && timeforest3 <= 5000) {
+
+    image(greyAriacries, width / 2 - 70, height / 2 + 100)
+    drawCocoon()
+    image(fragment1, 100, height - 200)
+    image(fragment2, width / 2 + 400, height - 200)
+  }
+  else if (timeforest3 >= 5000) {
+    image(greyAriacries, width / 2 - 70, height / 2 + 100)
+    drawCocoon()
+
+    push()
+    tint(255, 60 + frameCount % 255)
+    image(fragment3, width / 2 + 80, height - 200)
+    pop()
+    if (mouseIsPressed) {
+      scene = 8
+    }
+    // if (mouseX > width / 2 + 300 && mouseX < width / 2 + 500 && mouseY > height - 300 && mouseY < height - 100 && mouseIsPressed) {
+    //   scene = 5
+    // }
+  }
+}
+
+function flashback3() {
+  background(0)
+  timeFL3 = millis() - time - timecover - timeforest - timeFL1 - timeFL2 - timeFL2b - timeforest3
+  textSize(30)
+  fill(255)
+  text('to be continued XD', 40, 100)
+  text('game & character design & plots & original soundtrack made by Xinran Shen', 40, 150)
+  blueAria_opacity = map(timeFL3, 0, 10000, 255, 0)
+  push()
+  tint(255)
+  image(greyAria, width / 2 - 70, height / 2)
+  tint(255, blueAria_opacity)
+  image(blueAria, width / 2 - 70 - timeFL3 / 30, height / 2)
+
+  pop()
+
+}

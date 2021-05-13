@@ -3,7 +3,7 @@ class Jitter {
     this.x = x
     this.y = y
     this.speed = 0.7;
-   
+
   }
 
   move() {
@@ -12,9 +12,16 @@ class Jitter {
   }
 
   display() {
-    if (mouseIsPressed){
-      image(Ariacries,this.x,this.y)
+    if (scene == 1) {
+
+      if (mouseIsPressed) {
+        image(Ariacries, this.x, this.y)
+      }
+      else { image(Ariasits, this.x, this.y) }
     }
-    else{image(Ariasits,this.x,this.y)}
+
+    if (scene == 6) {
+      image(ariano, this.x, this.y)
+    }
   }
 }
