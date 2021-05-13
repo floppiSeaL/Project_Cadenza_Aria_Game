@@ -9,6 +9,7 @@
 //finish the flower conversation quickly
 
 
+
 let time
 let scene
 
@@ -27,6 +28,7 @@ let introbutton
 
 
 //cover
+let coverbgm
 let timecover
 let title
 let tap
@@ -44,10 +46,10 @@ let blueAria_opacity
 
 //flashback
 let mouseCount = 0
-
 let atRightPlace = false
-let cloudAtRightPlace = false
+let dogRightPlace = false
 let fl1bkdgood
+let fl1bkdbad
 let arialooksup
 let arialooksup2
 let thoughtbubble
@@ -97,7 +99,29 @@ let speechbubble = []
 let timeforest2
 let fragment2
 
+//flashback2
+let slider;
+let fl2bkdbad
+let stage
+let ariareachesout
+let ariaback
+let ariasurprise
+let ariaback1
+let ariashy
+let flower
+let flowernoeyes
+let fl2mouseCount = 0
+let a1, a2, a3, f1, f2, f3, f4
+let n1, n2, n3, n4
+let bystandercount = 0
+let kids1
+let kids2
+let incoming
+
 function preload() {
+
+  preloadDelay(5000);
+
   //intro
   scene1bkd = loadImage("scene1bkd.jpg")
 
@@ -111,7 +135,7 @@ function preload() {
   //cover
   title = loadImage('title.png')
   tap = loadImage('tap.png')
-
+  //coverbgm = loadSound('coverbgm.mps')
   //forest
 
   greyAria = loadImage("greyAria.png")
@@ -123,6 +147,7 @@ function preload() {
 
 
   fl1bkdgood = loadImage('fl1bkdgood.png')
+  fl1bkdbad = loadImage('fl1bkdbad.png')
   arialooksup = loadImage('arialooksup.png')
   arialooksup2 = loadImage('arialooksup2.png')
   thoughtbubble = loadImage('thoughtbubble.png')
@@ -150,6 +175,30 @@ function preload() {
 
   //forestscene2
   fragment2 = loadImage('fragment2.png')
+
+  //flashback2
+  fl2bkdbad = loadImage('fl2bkdbad.png')
+  ariareachesout = loadImage('ariareachesout.png')
+  ariaback = loadImage('ariaback.png')
+  ariaback1 = loadImage('ariaback1.png')
+  ariasurprise = loadImage('ariasurprise.png')
+  ariashy = loadImage('ariashy.png')
+  flower = loadImage('flower.png')
+  flowernoeyes = loadImage('flowernoeyes.png')
+  a1 = loadImage('a1.png')
+  a2 = loadImage('a2.png')
+  a3 = loadImage('a3.png')
+  f1 = loadImage('f1.png')
+  f2 = loadImage('f2.png')
+  f3 = loadImage('f3.png')
+  f4 = loadImage('f4.png')
+  n1 = loadImage('n1.png')
+  n2 = loadImage('n2.png')
+  n3 = loadImage('n3.png')
+  kids1 = loadImage('kids1.png')
+  kids2 = loadImage('kids2.png')
+  incoming = loadImage('incoming.png')
+
 }
 
 
@@ -157,6 +206,8 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   angleMode(DEGREES)
+  select('#splash').hide();
+
   //noCursor()
   scene = 0
 
@@ -254,7 +305,30 @@ function setup() {
   //forestscene2
   fragment2.resize(60, 60)
 
-
+  //flashback2
+  slider = createSlider(0, 360, 0, 40);
+  ariareachesout.resize(150, 150)
+  ariaback.resize(150, 150)
+  ariaback1.resize(150, 150)
+  ariashy.resize(190, 160)
+  ariasurprise.resize(160, 160)
+  flower.resize(90, 90)
+  flowernoeyes.resize(80, 80)
+  a1.resize(130, 100)
+  a2.resize(130, 100)
+  a3.resize(130, 100)
+  f1.resize(100, 60)
+  f2.resize(100, 60)
+  f3.resize(120, 80)
+  f4.resize(150, 100)
+  n1.resize(130, 100)
+  n2.resize(130, 100)
+  n3.resize(130, 100)
+  fl2bkdbad.resize(width, height + 190)
+  kids1.resize(300, 200)
+  kids2.resize(300, 200)
+  incoming.resize(width, height)
+  stage = 1
 }
 function draw() {
   if (scene == 0) {
@@ -268,7 +342,7 @@ function draw() {
   } else if (scene == 4) {
     forestscene2()
   } else if (scene == 5) {
-    flowertalk()
+    flashback2()
   }
 }
 function intropage() {
@@ -291,13 +365,15 @@ function intropage() {
   ariaScared()
   throwTags()
 
-  if (time > 20000) {
+  if (time > 10000) {
     image(introbutton, width - 300, height - 100)
 
     if (mouseX >= width - 300 && mouseX <= width && mouseY >= height - 100 && mouseY <= height) {
       scene = 1
     }
   }
+
+
 }
 
 function throwTags() {
@@ -315,11 +391,13 @@ function ariaScared() {
   Ariatrembles.display()
 }
 function coverpage() {
+
   timecover = millis() - time
   opacity = map(timecover, 0, 10000, 0, 255)
 
   background(0);
   tint(255, opacity)
+  //coverbgm.play()
   image(title, width / 2 - 250, height / 4)
   image(tap, width / 2 - 140, height * 3 / 4)
 
@@ -327,6 +405,7 @@ function coverpage() {
   if (opacity >= 200 && mouseIsPressed) {
     scene = 2
   }
+
 
 }
 
@@ -437,7 +516,6 @@ function flashback1() {
   dogleg4.leg4()
 
   pop()
-  //when the clouds are at their correct places
   if (
     doghead.x == headX && doghead.y == headY &&
 
@@ -453,8 +531,6 @@ function flashback1() {
 
   ) {
 
-    //the cloud is at right place
-    cloudAtRightPlace == true
     //the heart appears
 
     let fullheartopacitySpd = 5
@@ -468,7 +544,6 @@ function flashback1() {
 
     //during the heart opacity increase,Aria meet the dog
     if (fullheartopacity < 230) {
-
       image(ariasuperhappy, width / 2 + 50, height - 340)
       image(doggy, headX, headY - 5)
     }
@@ -476,23 +551,30 @@ function flashback1() {
     //when the heart is at its brightest, adult moves,and aria becomes unhappy 
     else if (fullheartopacity >= 230) {
       fullheartopacity = 230
-      let filterVal = map(adultX, 0, width / 3 - 50, 0, 1)
-      adultX += adultspeed
+      // let filterVal = map(adultX, 0, width / 3 - 50, 0, 1)
+      // adultX += adultspeed
 
-      push()
-      tint(255, adultopacity)
-      image(adult, adultX, height / 2)
-      pop()
+      // if (adultX > width / 3 - 150) {
+      //   atRightPlace = true;
+      //   adultspeed = 0
+      // }
+      let filterVal
+      if (atRightPlace == false) {
+        adultX += adultspeed
+        filterVal = map(adultX, 0, width / 3 - 50, 0, 1)
+
+        image(ariasuperhappy, width / 2 + 50, height - 350)
+        image(doggy, headX, headY - 5)
+
+        push()
+        tint(255, adultopacity)
+        image(adult, adultX, height / 2)
+        pop()
+      }
+
       if (adultX > width / 3 - 150) {
         atRightPlace = true;
-
         adultspeed = 0
-
-      }
-      if (atRightPlace == false && adultopacity == 255) {
-
-        image(ariasuperhappy, width / 2 + 50, height - 340)
-        image(doggy, headX, headY - 5)
       }
 
       fl1bkdgood.filter(GRAY)
@@ -501,81 +583,95 @@ function flashback1() {
     }
 
     //when the clouds are not at their correct places
-  } else if (mouseIsPressed) {
-    tint(255, flashbackopacity)
-    image(ariahappy, width / 2 + 50, height - 330)
-    image(thoughtbubble, width / 2 + 120, height / 2 - 20)
-
   } else {
-    push()
-    tint(255, flashbackopacity)
-    image(arialooksup, width / 2 + 50, height - 340)
-    image(thoughtbubble, width / 2 + 120, height / 2 - 120)
-    pop()
-  }
 
+    if (mouseIsPressed) {
+      tint(255, flashbackopacity)
+      image(ariahappy, width / 2 + 50, height - 330)
+      image(thoughtbubble, width / 2 + 120, height / 2 - 20)
+
+    } else {
+      push()
+      tint(255, flashbackopacity)
+      image(arialooksup, width / 2 + 50, height - 340)
+      image(thoughtbubble, width / 2 + 120, height / 2 - 120)
+      pop()
+    }
+  }
 
   if (atRightPlace == true) {
     mouseCount++
-    if (mouseCount >= 1 && mouseCount <= 3) {
+    if (mouseCount <= 3) {
       //aria!!
       image(speechbubble[1], adultX + 150, height / 2 - 100)
+
+      push()
+      tint(255, adultopacity)
+      image(adult, adultX, height / 2)
+      pop()
       image(doggy, headX, headY - 5)
-      image(ariasuperhappy, width / 2 + 50, height - 340)
-    } else if (mouseCount >= 4 && mouseCount <= 6) {
+      image(ariasuperhappy, width / 2 + 50, height - 350)
+    } else if (mouseCount <= 6) {
       //where have you been
       image(speechbubble[2], adultX + 150, height / 2 - 100)
+
+      push()
+      tint(255, adultopacity)
+      image(adult, adultX, height / 2)
+      pop()
       image(doggy, headX, headY - 5)
-      image(ariasuperhappy, width / 2 + 50, height - 340)
-    } else if (mouseCount >= 7 && mouseCount <= 9) {
+      image(ariasuperhappy, width / 2 + 50, height - 350)
+    } else if (mouseCount <= 9) {
       // i played with doggy
       image(speechbubble[3], adultX + 350, height / 2 - 50)
+      image(adult, adultX, height / 2)
       image(doggy, headX, headY - 5)
-      image(ariaexplaining, width / 2 + 50, height - 340)
-    } else if (mouseCount >= 10 && mouseCount <= 15) {
+      image(ariaexplaining, width / 2 + 50, height - 350)
+    } else if (mouseCount <= 15) {
       // a doggy?
       image(speechbubble[4], adultX + 150, height / 2 - 100)
-      adultopacity = -900
       image(adultlookup, adultX, height / 2)
       image(doggy, headX, headY - 5)
-      image(ariaexplaining, width / 2 + 50, height - 340)
+      image(ariaexplaining, width / 2 + 50, height - 350)
 
-    } else if (mouseCount >= 15 && mouseCount <= 20) {
+    } else if (mouseCount <= 20) {
       // they are just some clouds. no doggy
       image(speechbubble[5], adultX + 150, height / 2 - 100)
-      adultopacity = 255
       image(adult, adultX, height / 2)
       image(doggysad, headX, headY - 5)
-      image(ariaworried, width / 2 + 50, height - 340)
-    } else if (mouseCount >= 20 && mouseCount <= 24) {
+      image(ariaworried, width / 2 + 50, height - 350)
+    } else if (mouseCount <= 24) {
       // no there is a doggy
-      image(speechbubble[6], adultX + 350, height / 2) - 50
+      image(speechbubble[6], adultX + 350, height / 2 - 70)
+      image(adult, adultX, height / 2)
       image(doggysad, headX, headY - 5)
-      image(ariaworried, width / 2 + 50, height - 340)
-    } else if (mouseCount >= 24 && mouseCount <= 30) {
+      image(ariaworried, width / 2 + 50, height - 350)
+    } else if (mouseCount <= 30) {
       // you are trash
       image(speechbubble[7], adultX + 150, height / 2 - 100)
+      image(adult, adultX, height / 2)
       image(doggysad, headX, headY - 5)
-      image(ariaworried, width / 2 + 50, height - 340)
+      image(ariaworried, width / 2 + 50, height - 350)
+
     } else if (mouseCount > 30) {
-      //...
-      adultopacity = 0
+      //..
+
+      // rect(0, 0, width, height)
+      image(fl1bkdbad, 0, 0, windowWidth, windowHeight)
       image(speechbubble[8], adultX + 350, height / 2 - 50)
+
       image(doggyleaves, headX, headY - 5)
       image(arialooksup2, width / 2 + 50, height - 340)
+
       fullheartopacity = 0
       image(brokenheart1, 100, height - 200)
       if (mouseIsPressed) {
         scene = 4
       }
     }
-
-
   }
-
-
-
 }
+
 
 
 function mousePressed() {
@@ -755,12 +851,173 @@ function forestscene2() {
   }
 }
 
-function flowertalk() {
-  fill(49)
-  circle(100, 100, 50)
-  textSize(40)
-  text('In this second flashback, Aria talks with her flower friend, but other kids thought she is insane and is talking to herself. So they destroyed the flower', 0, 0)
+function flashback2() {
+
+  background(105, 60)
+
+  if (fl2mouseCount >= 7) {
+
+    slider.position(width / 2 - 70, 10);
+    slider.style('width', '80px');
+
+  }
+  swap()
+
+}
+function swap() {
+
+  let val = slider.value();
+
+  if (val == 0) {
+    ariaworld()
+  } if (val == 360) {
+
+    bystanderpov()
+  }
+}
+function bystanderpov() {
+
+  filter(GRAY)
+  image(fl2bkdbad, 0, -100)
+  if (scene == 5) {
+    bystandercount++
+  }
+
+  if (bystandercount >= 1) {
+
+    image(kids1, width - 400, height - 200)
+    image(kids2, width / 2 - 500, height - 300)
+    image(ariaback, width / 2 - 150, height / 2)
+    image(flowernoeyes, width / 2 - 50, height / 2 + 20)
+    image(n1, width / 2 - 200, height / 2 - 80)
+  } if (bystandercount >= 20) {
+
+    image(kids1, width - 400, height - 200)
+    image(kids2, width / 2 - 500, height - 300)
+    image(flowernoeyes, width / 2 - 50, height / 2 + 20)
+    image(ariaback1, width / 2 - 150, height / 2)
+
+    image(n2, width / 2 - 200, height / 2 - 80)
+  } if (bystandercount >= 30) {
+
+    image(kids1, width - 400, height - 200)
+    image(kids2, width / 2 - 500, height - 300)
+    image(flowernoeyes, width / 2 - 50, height / 2 + 20)
+    image(ariaback1, width / 2 - 150, height / 2)
+    image(n3, width / 2 - 200, height / 2 - 80)
+    if (mouseIsPressed) {
+      image(incoming, 0, 0)
+    }
+  }
+
+}
+function ariaworld() {
+  image(fl2bkdbad, 0, -100)
+
+  function zero() {
+    image(ariareachesout, width / 2 - 150, height / 2)
+    image(flower, width / 2, height / 2 + 70)
+  }
+  function one() {
+
+    image(ariareachesout, width / 2 - 150, height / 2)
+    image(flower, width / 2, height / 2 + 70)
+    image(a1, width / 2 - 150, height / 2 - 100)
+  }
+  function two() {
+
+    image(ariareachesout, width / 2 - 150, height / 2)
+    image(flower, width / 2, height / 2 + 70)
+    image(f1, width / 2 + 30, height / 2 + 10)
+  }
+  function three() {
+
+    image(ariareachesout, width / 2 - 150, height / 2)
+    image(flower, width / 2, height / 2 + 70)
+    image(a2, width / 2 - 150, height / 2 - 100)
+  }
+  function four() {
+
+    image(ariareachesout, width / 2 - 150, height / 2)
+    image(flower, width / 2, height / 2 + 70)
+    image(a3, width / 2 - 150, height / 2 - 100)
+  }
+  function five() {
+    image(ariasurprise, width / 2 - 150, height / 2)
+    image(flower, width / 2, height / 2 + 70)
+    image(f2, width / 2 + 30, height / 2 + 10)
+  }
+  function six() {
+    image(ariasurprise, width / 2 - 150, height / 2)
+    image(flower, width / 2, height / 2 + 70)
+    image(f3, width / 2 + 30, height / 2 + 10)
+  }
+  function seven() {
+    image(ariashy, width / 2 - 150, height / 2)
+    image(flower, width / 2, height / 2 + 70)
+    image(f4, width / 2 + 30, height / 2 - 8)
+    push()
+    tint(255, 60 + frameCount % 255)
+    image(fullheart, 100, height - 200)
+    pop()
+  }
+  if (stage == 1) {
+    zero();
+  } else if (stage == 2) {
+    one();
+  } else if (stage == 3) {
+    two();
+  } else if (stage == 4) {
+    three();
+  } else if (stage == 5) {
+    four();
+  } else if (stage == 6) {
+    five();
+  } else if (stage == 7) {
+    six();
+  } else if (stage == 8) {
+    seven();
+  }
+
 
 }
 
+function mouseClicked() {
+  if (scene == 5) {
+    fl2mouseCount++
+  }
+
+  if (fl2mouseCount == 1) {
+    stage = 1
+  } else if (fl2mouseCount == 3) {
+    stage = 3
+  } else if (fl2mouseCount == 2) {
+    stage = 2
+  } else if (fl2mouseCount == 4) {
+    stage = 4
+  } else if (fl2mouseCount == 5) {
+    stage = 5
+  } else if (fl2mouseCount == 6) {
+    stage = 6
+  } else if (fl2mouseCount == 7) {
+    stage = 7
+  }
+
+  if (stage == 1) {
+    stage = 2
+  } else if (stage == 2) {
+    stage = 3
+  } else if (stage == 3) {
+    stage = 4
+  } else if (stage == 4) {
+    stage = 5
+  } else if (stage == 5) {
+    stage = 6
+  } else if (stage == 6) {
+    stage = 7
+  } else if (stage == 7) {
+    stage = 8
+  }
+  console.log(fl2mouseCount)
+}
 
