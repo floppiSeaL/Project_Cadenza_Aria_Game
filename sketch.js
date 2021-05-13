@@ -9,7 +9,8 @@
 //finish the flower conversation quickly
 
 
-
+// hover over
+// sequence between the first two scenes
 let time
 let scene
 
@@ -117,6 +118,15 @@ let bystandercount = 0
 let kids1
 let kids2
 let incoming
+let kidX = 0
+let kid2X
+let kidXSpd = 10
+let kidY
+let kidYSpd = 10
+
+
+// music variables
+let horrorifying_bgm;
 
 function preload() {
 
@@ -135,6 +145,7 @@ function preload() {
   //cover
   title = loadImage('title.png')
   tap = loadImage('tap.png')
+
   //coverbgm = loadSound('coverbgm.mps')
   //forest
 
@@ -199,6 +210,9 @@ function preload() {
   kids2 = loadImage('kids2.png')
   incoming = loadImage('incoming.png')
 
+
+  // music
+  // horrorifying_bgm = loadSound('horrifying_bgm.wav')
 }
 
 
@@ -208,7 +222,7 @@ function setup() {
   angleMode(DEGREES)
   select('#splash').hide();
 
-  //noCursor()
+
   scene = 0
 
   //intro
@@ -329,13 +343,16 @@ function setup() {
   kids2.resize(300, 200)
   incoming.resize(width, height)
   stage = 1
+  kidY = height
+  kid2X = width
 }
 function draw() {
   if (scene == 0) {
-    intropage();
+    coverpage()
   } else if (scene == 1) {
-    coverpage();
-  } else if (scene == 2) {
+    intropage()
+  }
+  else if (scene == 2) {
     forestscene()
   } else if (scene == 3) {
     flashback1()
@@ -344,11 +361,40 @@ function draw() {
   } else if (scene == 5) {
     flashback2()
   }
+
 }
+
+function coverpage() {
+
+  timecover = millis()
+  opacity = map(timecover, 0, 10000, 0, 255)
+
+  background(0);
+  tint(255, opacity)
+  //coverbgm.play()
+  image(title, width / 2 - 250, height / 4)
+  image(tap, width / 2 - 140, height * 3 / 4)
+
+
+  if (opacity >= 200 && mouseIsPressed) {
+    scene = 1
+  }
+
+
+}
+
 function intropage() {
   background(10);
+  noCursor()
   image(pg, 0, 0);
-  time = millis()
+  time = millis() - timecover
+
+  // // music 
+  // if (!horrorifying_bgm.isPlaying()) {
+  //   horrorifying_bgm.play()
+  // }
+
+
   //eraser
   image(eraser, mouseX - 40, mouseY - 40, 70, 70)
 
@@ -356,7 +402,7 @@ function intropage() {
   root = new Root(random(width), random(height * 3 / 4, height * 3.8 / 4));
   roots.push(root);
 
-  for (let i = 0; i < roots.length; i += 4) {
+  for (let i = 0; i < roots.length; i++) {
     root = roots[i];
     root.display();
     root.move();
@@ -369,7 +415,7 @@ function intropage() {
     image(introbutton, width - 300, height - 100)
 
     if (mouseX >= width - 300 && mouseX <= width && mouseY >= height - 100 && mouseY <= height) {
-      scene = 1
+      scene = 2
     }
   }
 
@@ -390,27 +436,10 @@ function ariaScared() {
   Ariatrembles.move()
   Ariatrembles.display()
 }
-function coverpage() {
-
-  timecover = millis() - time
-  opacity = map(timecover, 0, 10000, 0, 255)
-
-  background(0);
-  tint(255, opacity)
-  //coverbgm.play()
-  image(title, width / 2 - 250, height / 4)
-  image(tap, width / 2 - 140, height * 3 / 4)
-
-
-  if (opacity >= 200 && mouseIsPressed) {
-    scene = 2
-  }
-
-
-}
 
 function forestscene() {
   background(0);
+  noCursor()
   image(pg1, 0, 0);
   timeforest = millis() - timecover - time
 
@@ -436,6 +465,12 @@ function forestscene() {
     image(fragment1, 100, height - 200)
     pop()
 
+
+    if (scene == 2 && mouseX > 0 && mouseX < 200 && mouseY > height - 300 && mouseY < height - 100) {
+      cursor('pointer');
+    } else {
+      cursor(ARROW)
+    }
 
     if (mouseX > 0 && mouseX < 200 && mouseY > height - 300 && mouseY < height - 100 && mouseIsPressed) {
       scene = 3
@@ -470,6 +505,8 @@ function drawCocoon() {
 
 function flashback1() {
   background(220);
+
+
   push()
   timeFL1 = millis() - time - timecover - timeforest
   flashbackopacity = map(timeFL1, 0, 10000, 0, 255)
@@ -516,6 +553,7 @@ function flashback1() {
   dogleg4.leg4()
 
   pop()
+
   if (
     doghead.x == headX && doghead.y == headY &&
 
@@ -585,6 +623,11 @@ function flashback1() {
     //when the clouds are not at their correct places
   } else {
 
+    if (scene == 3 && mouseX >= headX && mouseX <= tailX + 50 && mouseY >= tailY && mouseY <= tailY + 100) {
+      cursor('pointer')
+    } else {
+      cursor(ARROW)
+    }
     if (mouseIsPressed) {
       tint(255, flashbackopacity)
       image(ariahappy, width / 2 + 50, height - 330)
@@ -883,14 +926,17 @@ function bystanderpov() {
     bystandercount++
   }
 
-  if (bystandercount >= 1) {
+  kidX += kidXSpd
+  kid2X -= kidXSpd
+  kidY -= kidYSpd
+  if (bystandercount >= 1 && bystandercount < 20) {
 
     image(kids1, width - 400, height - 200)
     image(kids2, width / 2 - 500, height - 300)
     image(ariaback, width / 2 - 150, height / 2)
     image(flowernoeyes, width / 2 - 50, height / 2 + 20)
     image(n1, width / 2 - 200, height / 2 - 80)
-  } if (bystandercount >= 20) {
+  } if (bystandercount >= 20 && bystandercount < 30) {
 
     image(kids1, width - 400, height - 200)
     image(kids2, width / 2 - 500, height - 300)
@@ -900,17 +946,24 @@ function bystanderpov() {
     image(n2, width / 2 - 200, height / 2 - 80)
   } if (bystandercount >= 30) {
 
-    image(kids1, width - 400, height - 200)
-    image(kids2, width / 2 - 500, height - 300)
+
+    if (kidY == height / 2) {
+      kidXSpd = 0
+      kidYSpd = 0
+    }
+    image(kids2, kidX, kidY)
+    image(kids1, kid2X, kidY)
+    console.log(kidX, kidY)
+
+
     image(flowernoeyes, width / 2 - 50, height / 2 + 20)
     image(ariaback1, width / 2 - 150, height / 2)
     image(n3, width / 2 - 200, height / 2 - 80)
-    if (mouseIsPressed) {
-      image(incoming, 0, 0)
-    }
   }
 
 }
+
+
 function ariaworld() {
   image(fl2bkdbad, 0, -100)
 
