@@ -11,6 +11,8 @@
 
 // hover over
 // sequence between the first two scenes
+
+//如果另一个碎片的x y > m
 let time
 let scene
 
@@ -142,12 +144,33 @@ let fragment3
 
 //flashback3
 let timeFL3
+let dogreprise
+let flowerreprise
+let flower_opacity
+let dog_opacity
+let greyAriaL
+let greyAriaR
+let greyAriaUp
+let upvalue
+let finalestickers
+let g
+let b
+let finalehrt
+let finalehrtpc
+let finalebkdval
+
+//coda
+let coda
 
 // music variables
 let intro_weirdo
 let aria_motif1
 let aria_nervous
 let aria_heartbeat
+let aria_ambience
+let aria_resist
+let aria_finale
+
 
 function preload() {
 
@@ -247,8 +270,30 @@ function preload() {
   aria_motif1 = loadSound('aria_motif1.wav')
   aria_nervous = loadSound('aria_nervous.wav')
   aria_heartbeat = loadSound('aria_heartbeat.wav')
+  aria_ambience = loadSound('aria_ambience.wav')
+  aria_resist = loadSound('aria_resist.wav')
+  aria_finale = loadSound('aria_finale.wav')
 
 
+  //flashback3
+
+  dogreprise = loadImage("dogreprise.png")
+  flowerreprise = loadImage("flowerreprise.png")
+  greyAriaL = loadImage("greyAriaL.png")
+  greyAriaR = loadImage("greyAriaR.png")
+  greyAriaUp = loadImage("greyAriaUp.png")
+
+  //finale 
+
+  puzzle1 = loadImage('fragment1.png')
+  puzzle2 = loadImage('fragment3.png')
+  puzzle3 = loadImage('fragment2.png')
+  finalestickers = loadImage('finalestickers.png')
+  finalehrt = loadImage('finalehrt.png')
+  finalehrtpc = loadImage('finalehrtpc.png')
+
+  //the very end, coda
+  coda = loadImage('coda.png')
 
 }
 
@@ -277,8 +322,8 @@ function setup() {
   Ariatrembles = new Jitter(AriaX, AriaY + 10)
 
   //cover
-  pg1 = createGraphics(windowWidth, windowHeight);
-  pg1.background(0)
+  // pg1 = createGraphics(windowWidth, windowHeight);
+  // pg1.background(0)
   title.resize(500, 300)
   tap.resize(300, 100)
 
@@ -325,15 +370,15 @@ function setup() {
   speechbubble[7].resize(160, 130);
   speechbubble[8].resize(100, 70);
 
-
   dogbody = new Cloud(width / 3, height / 10)
-  dogleg1 = new Cloud(width / 3, height / 5 + 50)
-  dogleg2 = new Cloud(width / 2, height / 5 + 10)
-  dogleg3 = new Cloud(width / 3 - 130, height / 5 - 40)
-  dogleg4 = new Cloud(width / 3 - 100, height / 4)
+  dogleg1 = new Cloud(width / 3 + 60, height / 5 + 100)
+  dogleg2 = new Cloud(width / 2 + 50, height / 5 + 130)
+  dogleg3 = new Cloud(width / 3 - 230, height / 5 - 40)
+  dogleg4 = new Cloud(width / 3 - 100, height / 4 + 50)
 
-  dogtail = new Cloud(width / 2 + 130, height / 4 - 30)
+  dogtail = new Cloud(width / 2 + 230, height / 4 - 30)
   doghead = new Cloud(width / 3 - 50, height / 9)
+
 
   bodyX = width / 3
   bodyY = height / 10 - 70
@@ -397,6 +442,28 @@ function setup() {
   //forestscene3
   fragment3.resize(80, 70)
 
+  //flashback3b
+
+  dogreprise.resize(230, 350)
+  flowerreprise.resize(90, 90)
+  greyAriaL.resize(180, 260)
+  greyAriaR.resize(180, 260)
+  greyAriaUp.resize(180, 260)
+
+  // finale
+  pg3 = createGraphics(windowWidth, windowHeight);
+  pg3.background(69, 74, 105)
+  puzzle1.resize(300, 300)
+  puzzle2.resize(300, 300)
+  puzzle3.resize(300, 300)
+  finalestickers.resize(width, height)
+  finalehrt.resize(550, 550)
+  finalehrtpc.resize(560, 560)
+
+  //coda
+  coda.resize(width, height)
+
+
 }
 function draw() {
   if (scene == 0) {
@@ -415,10 +482,13 @@ function draw() {
     if (!aria_motif1.isPlaying()) {
       aria_motif1.play()
     }
-  } else if (scene == 3) {
-    flashback1()
-    aria_motif1.stop()
 
+  } else if (scene == 3) {
+
+    flashback1()
+    if (aria_motif1.isPlaying()) {
+      aria_motif1.stop()
+    }
     if (!aria_nervous.isPlaying()) {
       aria_nervous.play()
     }
@@ -426,9 +496,17 @@ function draw() {
   } else if (scene == 4) {
     forestscene2()
 
-    aria_nervous.stop()
+
+    if (aria_nervous.isPlaying()) {
+      aria_nervous.stop()
+    }
+
+    if (!aria_ambience.isPlaying()) {
+      aria_ambience.play()
+    }
   } else if (scene == 5) {
     flashback2()
+    aria_ambience.stop()
     if (!aria_motif1.isPlaying()) {
       aria_motif1.play()
     }
@@ -441,16 +519,34 @@ function draw() {
   } else if (scene == 7) {
     forestscene3()
     aria_heartbeat.stop()
+    if (!aria_ambience.isPlaying()) {
+      aria_ambience.play()
+    }
   } else if (scene == 8) {
     flashback3()
-  }
 
+  } else if (scene == 9) {
+    finale()
+    aria_ambience.stop()
+    if (!aria_resist.isPlaying()) {
+      aria_resist.play()
+    }
+  } else if (scene == 10) {
+    if (aria_resist.isPlaying()) {
+      aria_resist.stop()
+    }
+
+    if (!aria_finale.isPlaying()) {
+      aria_finale.play()
+    }
+    endpage()
+  }
 
 
 }
 
 function coverpage() {
-
+  noCursor()
   timecover = millis()
   opacity = map(timecover, 0, 10000, 0, 255)
 
@@ -460,7 +556,9 @@ function coverpage() {
   image(title, width / 2 - 250, height / 4)
   image(tap, width / 2 - 140, height * 3 / 4)
 
-
+  if (opacity >= 200) {
+    cursor('pointer.png')
+  }
   if (opacity >= 200 && mouseIsPressed) {
     scene = 1
   }
@@ -494,8 +592,10 @@ function intropage() {
 
   if (time > 10000) {
     image(introbutton, width - 300, height - 100)
-
     if (mouseX >= width - 300 && mouseX <= width && mouseY >= height - 100 && mouseY <= height) {
+      cursor('pointer.png')
+    }
+    if (mouseIsPressed && mouseX >= width - 300 && mouseX <= width && mouseY >= height - 100 && mouseY <= height) {
       scene = 2
     }
   }
@@ -509,8 +609,20 @@ function throwTags() {
 }
 
 function mouseDragged() {
-  pg.fill(10)
-  pg.circle(mouseX, mouseY, 100)
+  //eraser interaction in the intro
+  if (scene == 1) {
+    pg.fill(10)
+    pg.circle(mouseX, mouseY, 100)
+  }
+
+  //sewing interaction in the finale
+  if (scene == 9) {
+    let px = pmouseX;
+    let py = pmouseY
+    pg3.strokeWeight(2);
+    pg3.stroke(152, 215, 217);
+    pg3.line(mouseX, mouseY, px, py);
+  }
 }
 
 function ariaScared() {
@@ -546,12 +658,13 @@ function forestscene() {
 
 
     if (scene == 2 && mouseX > 0 && mouseX < 200 && mouseY > height - 300 && mouseY < height - 100) {
-      cursor('pointer');
+      cursor('pointer.png')
     } else {
-      cursor(ARROW)
+      noCursor()
     }
 
     if (mouseX > 0 && mouseX < 200 && mouseY > height - 300 && mouseY < height - 100 && mouseIsPressed) {
+
       scene = 3
     }
   }
@@ -584,9 +697,6 @@ function flashback1() {
   background(220);
 
 
-  if (!aria_motif1.isPlaying()) {
-    aria_motif1.play()
-  }
   push()
   timeFL1 = millis() - time - timecover - timeforest
   flashbackopacity = map(timeFL1, 0, 10000, 0, 255)
@@ -600,35 +710,36 @@ function flashback1() {
 
   push()
   tint(255, flashbackopacity)
-  dogtail.over()
+
+  dogtail.tailover()
   dogtail.update()
   dogtail.tail()
 
-  dogbody.over()
+  dogbody.bodyover()
   dogbody.update()
   dogbody.body()
 
-  doghead.over()
+  doghead.headover()
   doghead.update()
   doghead.head()
 
-  dogleg1.over()
+  dogleg1.leg1over()
   dogleg1.update()
   dogleg1.leg1()
 
 
-  dogleg2.over()
+  dogleg2.leg2over()
   dogleg2.update()
   dogleg2.leg2()
 
 
-  dogleg3.over()
+  dogleg3.leg3over()
   dogleg3.update()
   dogleg3.leg3()
 
 
 
-  dogleg4.over()
+  dogleg4.leg4over()
   dogleg4.update()
   dogleg4.leg4()
 
@@ -650,7 +761,7 @@ function flashback1() {
   ) {
 
     //the heart appears
-
+    noCursor()
     let fullheartopacitySpd = 5
     fullheartopacity += fullheartopacitySpd
 
@@ -702,12 +813,14 @@ function flashback1() {
 
     //when the clouds are not at their correct places
   } else {
-
-    if (scene == 3 && mouseX >= headX && mouseX <= tailX + 50 && mouseY >= tailY && mouseY <= tailY + 100) {
-      cursor('pointer')
+    if (flashbackopacity > 200) {
+      cursor('pointer.png')
     } else {
-      cursor(ARROW)
+      noCursor()
     }
+
+
+
     if (mouseIsPressed) {
       tint(255, flashbackopacity)
       image(ariahappy, width / 2 + 50, height - 330)
@@ -723,14 +836,8 @@ function flashback1() {
   }
   if (atRightPlace == false) {
 
-    if (!aria_motif1.isPlaying()) {
-      aria_motif1.play()
-    }
   } else if (atRightPlace == true) {
 
-    if (!aria_nervous.isPlaying()) {
-      aria_nervous.play()
-    }
     mouseCount++
     if (mouseCount <= 3) {
       //aria!!
@@ -773,7 +880,7 @@ function flashback1() {
       image(ariaworried, width / 2 + 50, height - 350)
     } else if (mouseCount <= 24) {
       // no there is a doggy
-      image(speechbubble[6], adultX + 350, height / 2 - 70)
+      image(speechbubble[6], adultX + 250, height / 2 - 70)
       image(adult, adultX, height / 2)
       image(doggysad, headX, headY - 5)
       image(ariaworried, width / 2 + 50, height - 350)
@@ -788,8 +895,9 @@ function flashback1() {
       //..
 
       // rect(0, 0, width, height)
+      cursor('pointer.png')
       image(fl1bkdbad, 0, 0, windowWidth, windowHeight)
-      image(speechbubble[8], adultX + 350, height / 2 - 50)
+      image(speechbubble[8], adultX + 230, height / 2)
 
       image(doggyleaves, headX, headY - 5)
       image(arialooksup2, width / 2 + 50, height - 340)
@@ -806,16 +914,35 @@ function flashback1() {
 
 
 function mousePressed() {
-  doghead.pressed()
-  dogleg1.pressed()
-  dogleg2.pressed()
-  dogleg3.pressed()
-  dogleg4.pressed()
-  dogbody.pressed()
-  dogtail.pressed()
 
+  if (scene == 3) {
 
+    doghead.headpressed()
+    dogleg1.leg1pressed()
+    dogleg2.leg2pressed()
+    dogleg3.leg3pressed()
+    dogleg4.leg4pressed()
+    dogbody.bodypressed()
+    dogtail.tailpressed()
+  }
   //console.log(mouseX + "," + mouseY)
+  if (scene == 9) {
+
+    g = map(mouseY, 0, windowWidth, 150, 255);
+    b = map(mouseY, 0, windowWidth, 39, 255);
+    pg3.fill(240, g, b);
+    pg3.noStroke();
+
+    pg3.ellipse(mouseX, mouseY, 15, 35);
+    pg3.ellipse(mouseX, mouseY, 35, 15);
+    if (mouseY >= height / 2 + 100 + 275) {
+      push()
+      pg3.imageMode(CENTER)
+      pg3.image(finalehrt, width / 2, height / 2 + 100)
+      pop()
+    }
+  }
+
 }
 
 function mouseReleased() {
@@ -834,6 +961,8 @@ function mouseReleased() {
 // draggable class learned from a coding train sketch https://editor.p5js.org/codingtrain/sketches/U0R5B6Z88
 
 
+///new cloud class
+
 
 class Cloud {
   constructor(x, y) {
@@ -841,12 +970,78 @@ class Cloud {
     this.rollover = false;
     this.x = x;
     this.y = y;
+    this.headw = 300;
+    this.headh = 250;
+    this.leg1w = 150;
+    this.leg1h = 150;
+    this.leg2w = 150;
+    this.leg2h = 150;
+    this.leg3w = 150;
+    this.leg3h = 150;
+    this.leg4w = 150;
+    this.leg4h = 150;
+    this.bodyw = 400;
+    this.bodyh = 250;
+    this.tailw = 150;
+    this.tailh = 150
     this.xoff = 0;
     this.yoff = 0;
+
   }
 
-  over() {
-    if (mouseX > this.x && mouseX < this.x + 200 && mouseY > this.y && mouseY < this.y + 180) {
+  headover() {
+    if (mouseX > this.x && mouseX < this.x + this.headw && mouseY > this.y && mouseY < this.y + this.headh) {
+      this.rollover = true;
+    } else {
+      this.rollover = false;
+    }
+  }
+
+
+  leg1over() {
+    if (mouseX > this.x && mouseX < this.x + this.leg1w && mouseY > this.y && mouseY < this.y + this.leg1h) {
+      this.rollover = true;
+    } else {
+      this.rollover = false;
+    }
+  }
+
+  leg2over() {
+    if (mouseX > this.x && mouseX < this.x + this.leg2w && mouseY > this.y && mouseY < this.y + this.leg2h) {
+      this.rollover = true;
+    } else {
+      this.rollover = false;
+    }
+  }
+
+
+  leg3over() {
+    if (mouseX > this.x && mouseX < this.x + this.leg3w && mouseY > this.y && mouseY < this.y + this.leg3h) {
+      this.rollover = true;
+    } else {
+      this.rollover = false;
+    }
+  }
+
+
+  leg4over() {
+    if (mouseX > this.x && mouseX < this.x + this.leg4w && mouseY > this.y && mouseY < this.y + this.leg4h) {
+      this.rollover = true;
+    } else {
+      this.rollover = false;
+    }
+  }
+
+  bodyover() {
+    if (mouseX > this.x && mouseX < this.x + this.bodyw && mouseY > this.y && mouseY < this.y + this.bodyh) {
+      this.rollover = true;
+    } else {
+      this.rollover = false;
+    }
+  }
+
+  tailover() {
+    if (mouseX > this.x && mouseX < this.x + this.tailw && mouseY > this.y && mouseY < this.y + this.tailh) {
       this.rollover = true;
     } else {
       this.rollover = false;
@@ -861,6 +1056,7 @@ class Cloud {
   }
 
   head() {
+    //imageMode(CENTER)
     image(piece1, this.x, this.y)
     // //37 19
     if (this.x > headX - 100 && this.x < headX + 100) {
@@ -872,6 +1068,7 @@ class Cloud {
   }
 
   leg1() {
+    //imageMode(CENTER)
     image(piece2, this.x, this.y)
     //54 168
     if (this.x > leg1X - 100 && this.x < leg1X + 100) {
@@ -882,6 +1079,7 @@ class Cloud {
     }
   }
   leg2() {
+    //imageMode(CENTER)
     image(piece3, this.x, this.y)
     //132 177
     if (this.x > leg2X - 100 && this.x < leg2X + 100) {
@@ -892,7 +1090,7 @@ class Cloud {
     }
   }
   body() {
-
+    //imageMode(CENTER)
     image(piece4, this.x, this.y)
     //183 53
     if (this.x > bodyX - 100 && this.x < bodyX + 100) {
@@ -903,6 +1101,7 @@ class Cloud {
     }
   }
   leg3() {
+    //imageMode(CENTER)
     image(piece5, this.x, this.y)
     //372 169
     if (this.x > leg3X - 100 && this.x < leg3X + 100) {
@@ -914,6 +1113,7 @@ class Cloud {
     }
   }
   leg4() {
+    //imageMode(CENTER)
     image(piece6, this.x, this.y)
     //427 162
 
@@ -926,6 +1126,7 @@ class Cloud {
     }
   }
   tail() {
+    //imageMode(CENTER)
     image(piece7, this.x, this.y)
     //443,38
 
@@ -939,11 +1140,71 @@ class Cloud {
   }
 
 
-  pressed() {
-    if (mouseX > this.x && mouseX < this.x + 400 && mouseY > this.y && mouseY < this.y + 180) {
+  headpressed() {
+    if (mouseX > this.x && mouseX < this.x + this.headw && mouseY > this.y && mouseY < this.y + this.headh) {
       this.dragging = true;
       this.xoff = this.x - mouseX;
       this.yoff = this.y - mouseY;
+    }
+  }
+  leg1pressed() {
+    if (mouseX > this.x && mouseX < this.x + this.leg1w && mouseY > this.y && mouseY < this.y + this.leg1h) {
+
+      this.dragging = true;
+      this.xoff = this.x - mouseX;
+      this.yoff = this.y - mouseY;
+
+    }
+  }
+
+  leg2pressed() {
+    if (mouseX > this.x && mouseX < this.x + this.leg2w && mouseY > this.y && mouseY < this.y + this.leg2h) {
+
+      this.dragging = true;
+      this.xoff = this.x - mouseX;
+      this.yoff = this.y - mouseY;
+
+    }
+  }
+
+
+  leg3pressed() {
+    if (mouseX > this.x && mouseX < this.x + this.leg3w && mouseY > this.y && mouseY < this.y + this.leg3h) {
+
+      this.dragging = true;
+      this.xoff = this.x - mouseX;
+      this.yoff = this.y - mouseY;
+
+    }
+  }
+
+  leg4pressed() {
+    if (mouseX > this.x && mouseX < this.x + this.leg4w && mouseY > this.y && mouseY < this.y + this.leg4h) {
+
+      this.dragging = true;
+      this.xoff = this.x - mouseX;
+      this.yoff = this.y - mouseY;
+
+    }
+  }
+
+  tailpressed() {
+    if (mouseX > this.x && mouseX < this.x + this.tailw && mouseY > this.y && mouseY < this.y + this.tailh) {
+
+      this.dragging = true;
+      this.xoff = this.x - mouseX;
+      this.yoff = this.y - mouseY;
+
+    }
+  }
+
+  bodypressed() {
+    if (mouseX > this.x && mouseX < this.x + this.bodyw && mouseY > this.y && mouseY < this.y + this.bodyh) {
+
+      this.dragging = true;
+      this.xoff = this.x - mouseX;
+      this.yoff = this.y - mouseY;
+
     }
   }
 
@@ -953,10 +1214,10 @@ class Cloud {
   }
 }
 
-
 function forestscene2() {
   background(0);
   image(pg1, 0, 0);
+  noCursor()
   timeforest2 = millis() - timecover - time - timeforest - timeFL1
 
   if (timeforest2 > 0 && timeforest2 <= 5000) {
@@ -973,9 +1234,19 @@ function forestscene2() {
     tint(255, 60 + frameCount % 255)
     image(fragment2, width / 2 + 400, height - 200)
     pop()
-    if (mouseIsPressed) {
+
+    if (scene == 4 && mouseX > width / 2 + 300 && mouseX < width / 2 + 500 && mouseY > height - 300 && mouseY < height - 100) {
+      cursor('pointer.png')
+    } else {
+      noCursor()
+    }
+
+    if (scene == 4 && mouseX > width / 2 + 300 && mouseX < width / 2 + 500 && mouseY > height - 300 && mouseY < height - 100 && mouseIsPressed) {
       scene = 5
     }
+    // if (mouseIsPressed) {
+    //   scene = 5
+    // }
     // if (mouseX > width / 2 + 300 && mouseX < width / 2 + 500 && mouseY > height - 300 && mouseY < height - 100 && mouseIsPressed) {
     //   scene = 5
     // }
@@ -1010,7 +1281,7 @@ function swap() {
   }
 }
 function bystanderpov() {
-
+  noCursor()
   filter(GRAY)
   image(fl2bkdbad, 0, -100)
   if (scene == 5) {
@@ -1127,6 +1398,7 @@ function ariaworld() {
     tint(255, 60 + frameCount % 255)
     image(fullheart, 100, height - 200)
     pop()
+    cursor('pointer.png')
   }
   if (stage == 1) {
     zero();
@@ -1189,9 +1461,10 @@ function mouseClicked() {
 }
 
 function flashback2b() {
-  background(163, 95, 82)
+  background(183, 95, 82)
+  noCursor()
   timeFL2b = millis() - time - timecover - timeforest - timeforest2 - timeFL1 - timeFL2
-  twobtimer++
+
   //image(fl2bkdbad, 0, -100)
   // image(ariano, width / 2 - 180, height / 2 - 200)
   Ariashakes.move()
@@ -1216,16 +1489,17 @@ function flashback2b() {
 
     image(brokenheart2, 100, height - 200)
   }
-  if (timeFL2b >= 20000) {
+  if (timeFL2b >= 13000) {
     scene = 7
   }
-  console.log(twobtimer)
+
 }
 
 function forestscene3() {
   background(0);
   image(pg1, 0, 0);
-  timeforest3 = millis() - time - timecover - timeforest - timeFL1 - timeFL2 - timeFL2b
+  noCursor()
+  timeforest3 = millis() - time - timecover - timeforest - timeforest2 - timeFL1 - timeFL2 - timeFL2b
 
   if (timeforest3 > 0 && timeforest3 <= 5000) {
 
@@ -1242,29 +1516,140 @@ function forestscene3() {
     tint(255, 60 + frameCount % 255)
     image(fragment3, width / 2 + 80, height - 200)
     pop()
+
     if (mouseIsPressed) {
       scene = 8
     }
-    // if (mouseX > width / 2 + 300 && mouseX < width / 2 + 500 && mouseY > height - 300 && mouseY < height - 100 && mouseIsPressed) {
-    //   scene = 5
+    // if (scene == 7 && mouseX > width / 2 + 70 && mouseX < width / 2 + 90 && mouseY > height - 300 && mouseY < height - 100) {
+    //   cursor('pointer.png')
+    // } else {
+    //   noCursor()
+    // }
+    // if (scene == 7 && mouseX > width / 2 + 70 && mouseX < width / 2 + 90 && mouseY > height - 300 && mouseY < height - 100 && mouseIsPressed) {
+    //   scene = 8
     // }
   }
 }
 
 function flashback3() {
   background(0)
-  timeFL3 = millis() - time - timecover - timeforest - timeFL1 - timeFL2 - timeFL2b - timeforest3
-  textSize(30)
-  fill(255)
-  text('to be continued XD', 40, 100)
-  text('game & character design & plots & original soundtrack made by Xinran Shen', 40, 150)
-  blueAria_opacity = map(timeFL3, 0, 10000, 255, 0)
+  noCursor()
+  timeFL3 = millis() - time - timecover - timeforest - timeforest2 - timeFL1 - timeFL2 - timeFL2b - timeforest3
+
+
+  if (timeFL3 > 0 && timeFL3 <= 8000) {
+
+    blueAria_opacity = map(timeFL3, 0, 8000, 255, 0)
+    push()
+    tint(255)
+    image(greyAria, width / 2 - 70, height / 2)
+    tint(255, blueAria_opacity)
+    image(blueAria, width / 2 - 70 - timeFL3 / 30, height / 2)
+    pop()
+  }
+  else if (timeFL3 >= 8000 && timeFL3 <= 10000) {
+    dog_opacity = map(timeFL3, 8000, 10000, 0, 235)
+    image(greyAriaR, width / 2 - 70, height / 2 - 20)
+
+    push()
+    tint(255, dog_opacity)
+
+    image(dogreprise, width / 2 + 70, height / 2 - 30)
+    image(fragment1, width / 2 + 120, height / 2 + 80)
+    pop()
+
+  } else if (timeFL3 >= 10000 && timeFL3 <= 12000) {
+
+    noCursor()
+    flower_opacity = map(timeFL3, 10000, 12000, 0, 235)
+    image(greyAriaL, width / 2 - 70, height / 2 - 20)
+
+    push()
+    tint(255, dog_opacity)
+
+    image(dogreprise, width / 2 + 70, height / 2 - 30)
+    image(fragment1, width / 2 + 120, height / 2 + 80)
+    pop()
+    push()
+    tint(255, flower_opacity)
+    image(flowerreprise, width / 2 - 90, height / 2 + 133)
+    image(fragment2, width / 2 - 100, height / 2 + 163)
+    pop()
+  } else if (timeFL3 >= 12000 && timeFL3 < 15000) {
+
+    //fragment3 appears
+    flower_opacity = map(timeFL3, 10000, 12000, 0, 235)
+    image(greyAriaUp, width / 2 - 70, height / 2 - 20)
+    image(fragment3, width / 2 - 70, height / 2 + 10)
+    //drawCocoon()
+    push()
+    tint(255, dog_opacity)
+
+    image(dogreprise, width / 2 + 70, height / 2 - 30)
+    image(fragment1, width / 2 + 120, height / 2 + 80)
+    pop()
+    push()
+    tint(255, flower_opacity)
+    image(flowerreprise, width / 2 - 90, height / 2 + 133)
+    image(fragment2, width / 2 - 100, height / 2 + 163)
+    pop()
+
+  } else if (timeFL3 >= 15000) {
+    //upvalue = timeFL3 / 4000
+    background(0)
+    cursor('pointer.png')
+    flower_opacity = map(timeFL3, 10000, 12000, 0, 235)
+    image(greyAriaUp, width / 2 - 70, height / 2 - 20)
+    image(fragment3, width / 2 - 70, height / 2 + 10)
+    //drawCocoon()
+    push()
+    tint(255, dog_opacity)
+
+    image(dogreprise, width / 2 + 70, height / 2 - 30)
+    image(fragment1, width / 2 + 120, height / 2 + 80)
+    pop()
+
+    push()
+    tint(255, flower_opacity)
+    image(flowerreprise, width / 2 - 90, height / 2 + 133)
+    image(fragment2, width / 2 - 100, height / 2 + 163)
+    pop()
+
+
+    scene = 9
+  }
+
+  console.log(timeFL3, flower_opacity)
+
+}
+
+
+function finale() {
+  background(0)
+  image(pg3, 0, 0);
+  image(finalestickers, 0, 0)
+
+
   push()
-  tint(255)
-  image(greyAria, width / 2 - 70, height / 2)
-  tint(255, blueAria_opacity)
-  image(blueAria, width / 2 - 70 - timeFL3 / 30, height / 2)
+  imageMode(CENTER)
+  tint(255, 100)
+  image(finalehrtpc, width / 2, height / 2 + 100)
 
   pop()
 
+
+  if (mouseY > height / 2 + 100 + 270 && mouseY < height && mouseIsPressed) {
+    scene = 10
+  }
+
+
+
+  // image(puzzle1, width / 3 - 60, height / 4 + 100)
+  // image(puzzle2, width / 2.5 - 60, height / 4 + 100)
+  // image(puzzle3, width / 2 - 60, height / 4 + 100)
+}
+
+function endpage() {
+  background(0)
+  image(coda, 0, 0)
 }
